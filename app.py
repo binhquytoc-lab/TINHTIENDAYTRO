@@ -53,9 +53,9 @@ so_phong = st.sidebar.slider(
 st.sidebar.markdown("---")
 st.sidebar.header("📅 THỜI GIAN LÀM VIỆC")
 
-# Cấu hình danh sách năm (Cho phép chọn từ 3 năm trước đến 2 năm sau năm hiện tại)
+# Cấu hình danh sách năm (Cho phép chọn từ 1 năm trước đến 4 năm sau năm hiện tại)
 nam_hien_tai = datetime.now().year
-danh_sach_nam = list(range(nam_hien_tai - 3, nam_hien_tai + 3))
+danh_sach_nam = list(range(nam_hien_tai - 1, nam_hien_tai + 5))
 nam_chon = st.sidebar.selectbox(
     "Chọn năm:",
     danh_sach_nam,
