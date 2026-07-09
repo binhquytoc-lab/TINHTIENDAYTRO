@@ -10,12 +10,12 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🏠 HỆ THỐNG QUẢN LÝ TIỀN DÃY PHÒNG TRỌ")
+st.title("🏠 PHẦN MỀM QUẢN LÝ THU TIỀN DÃY PHÒNG TRỌ_VŨ ĐỨC BÌNH")
 
 # ======================================
 # SIDEBAR - ĐƠN GIÁ & CẤU HÌNH
 # ======================================
-st.sidebar.header("⚙️ CẤU HÌNH CHUNG")
+st.sidebar.header("⚙️ ĐƠN GIÁ ĐIỆN NƯỚC")
 
 gia_dien = st.sidebar.number_input(
     "⚡ Giá điện (đ/kWh)",
@@ -32,7 +32,7 @@ gia_nuoc = st.sidebar.number_input(
 )
 
 phi_khac = st.sidebar.number_input(
-    "📦 Phí khác (Vệ sinh, wifi...)",
+    "📦 Phí khác (wifi, vệ sinh...)",
     min_value=0,
     value=150000,
     step=10000
@@ -123,7 +123,7 @@ with c5:
 
 # Sửa lỗi: Nhận giá trị ghi chú và lưu trực tiếp vào data
 data["ghi_chu"] = st.text_input(
-    "📝 Ghi chú (Ví dụ: Đã đóng cọc, phòng trống...)",
+    "📝 Ghi chú (Ví dụ: Đã thanh toán, chưa thanh toán...)",
     value=data["ghi_chu"],
     key=f"ghichu_{phong}"
 )
@@ -167,7 +167,7 @@ for i in range(1, so_phong + 1):
 # HIỂN THỊ BẢNG KẾT QUẢ & XUẤT FILE
 # ======================================
 st.divider()
-st.header("📊 Bảng Tổng Hợp Chi Phí")
+st.header("📊 Bảng tổng hợp tiền trọ")
 
 df = pd.DataFrame(ket_qua)
 
@@ -187,7 +187,7 @@ st.dataframe(
 
 # Hiển thị tổng doanh thu tổng quan
 st.metric(
-    "💰 TỔNG DOANH THU DỰ KIẾN",
+    "💰 TỔNG THU NHẬP CÁC PHÒNG",
     f"{tong_doanh_thu:,.0f} VNĐ"
 )
 
