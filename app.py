@@ -17,7 +17,7 @@ st.title("🏠 HỆ THỐNG QUẢN LÝ TIỀN DÃY PHÒNG TRỌ")
 # SIDEBAR
 # ======================================
 
-st.sidebar.header("⚙️ CẤU HÌNH")
+st.sidebar.header("⚙️ ĐƠN GIÁ ĐIỆN NƯỚC")
 
 gia_dien = st.sidebar.number_input(
     "⚡ Giá điện (VNĐ/số)",
