@@ -49,7 +49,7 @@ so_phong = st.sidebar.slider(
 
 st.divider()
 
-st.header("📋 NHẬP CHỈ SỐ TỪNG PHÒNG")
+st.header("📋 NHẬP CHỈ SỐ ĐIỆN NƯỚC TỪNG PHÒNG")
 
 ket_qua = []
 tong_doanh_thu = 0
@@ -71,28 +71,28 @@ for i in range(1, so_phong + 1):
 
     with c2:
         dien_cu = st.number_input(
-            "Điện cũ",
+            "Số điện cũ",
             min_value=0,
             key=f"dc{i}"
         )
 
     with c3:
         dien_moi = st.number_input(
-            "Điện mới",
+            "Số điện mới",
             min_value=0,
             key=f"dm{i}"
         )
 
     with c4:
         nuoc_cu = st.number_input(
-            "Nước cũ",
+            "Số nước cũ",
             min_value=0,
             key=f"nc{i}"
         )
 
     with c5:
         nuoc_moi = st.number_input(
-            "Nước mới",
+            "Số nước mới",
             min_value=0,
             key=f"nm{i}"
         )
@@ -123,11 +123,11 @@ for i in range(1, so_phong + 1):
     ket_qua.append({
         "Phòng": i,
         "Giá phòng": f"{gia_phong:,.0f}",
-        "Điện cũ": dien_cu,
-        "Điện mới": dien_moi,
+        "Số điện cũ": dien_cu,
+        "Số điện mới": dien_moi,
         "Tiền điện": f"{tien_dien:,.0f}",
-        "Nước cũ": nuoc_cu,
-        "Nước mới": nuoc_moi,
+        "Số nước cũ": nuoc_cu,
+        "Số nước mới": nuoc_moi,
         "Tiền nước": f"{tien_nuoc:,.0f}",
         "Phí khác": f"{phi_khac:,.0f}",
         "Tổng tiền": f"{tong_tien:,.0f}"
@@ -135,7 +135,7 @@ for i in range(1, so_phong + 1):
 
 st.divider()
 
-st.header("📊 BẢNG TÍNH TIỀN")
+st.header("📊 BẢNG TÍNH TIỀN TRỌ")
 
 df = pd.DataFrame(ket_qua)
 
@@ -148,7 +148,7 @@ hide_index=True
 st.divider()
 
 st.metric(
-    "💰 TỔNG DOANH THU CẢ DÃY",
+    "💰 TỔNG THU NHẬP CẢ DÃY TRỌ",
     f"{tong_doanh_thu:,.0f} VNĐ"
 )
 
