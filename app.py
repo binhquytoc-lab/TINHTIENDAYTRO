@@ -42,9 +42,10 @@ phi_khac = st.sidebar.number_input(
 
 so_phong = st.sidebar.slider(
     "Số phòng",
-    1,
-    50,
-    10
+    min_value=1,
+    max_value=100,
+    value=10,
+    step=1
 )
 
 # ======================================
@@ -52,19 +53,17 @@ so_phong = st.sidebar.slider(
 # ======================================
 
 if "phong_data" not in st.session_state:
-
     st.session_state.phong_data = {}
 
-    for i in range(1, so_phong + 1):
-
+# Tạo dữ liệu cho các phòng chưa có
+for i in range(1, so_phong + 1):
+    if i not in st.session_state.phong_data:
         st.session_state.phong_data[i] = {
-
-            "gia_phong":2500000,
-            "dien_cu":0,
-            "dien_moi":0,
-            "nuoc_cu":0,
-            "nuoc_moi":0
-
+            "gia_phong": 2500000,
+            "dien_cu": 0,
+            "dien_moi": 0,
+            "nuoc_cu": 0,
+            "nuoc_moi": 0
         }
 
 # ======================================
