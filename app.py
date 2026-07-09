@@ -64,6 +64,7 @@ for i in range(1, so_phong + 1):
             "dien_moi": 0,
             "nuoc_cu": 0,
             "nuoc_moi": 0
+            "ghi_chu": ""
         }
 
 # ======================================
@@ -115,7 +116,15 @@ with c5:
     )
 
 st.session_state.phong_data[phong] = data
+st.text_input(
+    "📝 Ghi chú",
+    value=data["ghi_chu"],
+    key=f"ghichu_{phong}"
+)
 
+data["ghi_chu"] = st.session_state[f"ghichu_{phong}"]
+
+st.session_state.phong_data[phong] = data
 # ======================================
 # TÍNH TOÁN
 # ======================================
@@ -153,8 +162,8 @@ for i in range(1, so_phong + 1):
         "Nước mới":d["nuoc_moi"],
         "Tiền nước":f"{tien_nuoc:,.0f}",
         "Phí khác":f"{phi_khac:,.0f}",
-        "Tổng tiền":f"{tong_tien:,.0f}"
-
+        "Tổng tiền":f"{tong_tien:,.0f}",
+        "Ghi chú":d["ghi_chu"]
     })
 
 # ======================================
