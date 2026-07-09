@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🏠 PHẦN MỀM QUẢN LÝ THU TIỀN DÃY TRỌ_VỦ ĐỨC BÌNH")
+st.title("🏠 PHẦN MỀM QUẢN LÝ THU TIỀN DÃY TRỌ_VŨ ĐỨC BÌNH")
 
 # ======================================
 # SIDEBAR - ĐƠN GIÁ & CẤU HÌNH
@@ -48,74 +48,93 @@ so_phong = st.sidebar.slider(
 )
 
 # ======================================
-# CHỌN THÁNG QUẢN LÝ
+# CẢI TIẾN: CHỌN NĂM VÀ THÁNG RIÊNG BIỆT
 # ======================================
 st.sidebar.markdown("---")
-st.sidebar.header("📅 THỜI GIAN")
+st.sidebar.header("📅 THỜI GIAN LÀM VIỆC")
 
-# Danh sách 12 tháng trong năm hiện tại
+# Cấu hình danh sách năm (Cho phép chọn từ 3 năm trước đến 2 năm sau năm hiện tại)
 nam_hien_tai = datetime.now().year
-danh_sach_thang = [f"Tháng {m}/{nam_hien_tai}" for m in range(1, 13)]
-
-# Lấy tháng hiện tại làm mặc định
-thang_hien_tai_idx = datetime.now().month - 1
-thang_chon = st.sidebar.selectbox(
-    "Chọn tháng làm việc:",
-    danh_sach_thang,
-    index=thang_hien_tai_idx
+danh_sach_nam = list(range(nam_hien_tai - 3, nam_hien_tai + 3))
+nam_chon = st.sidebar.selectbox(
+    "Chọn năm:",
+    danh_sach_nam,
+    index=danh_sach_nam.index(nam_hien_tai)
 )
 
-# Lấy số tháng (int) để tính toán tháng trước/tháng sau
-idx_thang_chon = danh_sach_thang.index(thang_chon) + 1 
+# Cấu hình danh sách 12 tháng
+thang_hien_tai = datetime.now().month
+danh_sach_thang = list(range(1, 13))
+idx_thang_chon = st.sidebar.selectbox(
+    "Chọn tháng:",
+    danh_sach_thang,
+    index=thang_hien_tai - 1,
+    format_func=lambda x: f"Tháng {x}"
+)
+
+thang_chon_str = f"Tháng {idx_thang_chon}/{nam_chon}"
 
 # ======================================
-# KHỞI TẠO & ĐỒNG BỘ DỮ LIỆU THEO THÁNG
+# KHỞI TẠO & ĐỒNG BỘ DỮ LIỆU ĐA TẦNG (NĂM -> THÁNG)
 # ======================================
 if "phong_data_theo_thang" not in st.session_state:
     st.session_state.phong_data_theo_thang = {}
 
-# Khởi tạo dữ liệu cho tháng hiện tại nếu chưa từng có
-if idx_thang_chon not in st.session_state.phong_data_theo_thang:
-    st.session_state.phong_data_theo_thang[idx_thang_chon] = {}
+# Cấu hình cây dữ liệu cho Năm -> Tháng nếu chưa tồn tại
+if nam_chon not in st.session_state.phong_data_theo_thang:
+    st.session_state.phong_data_theo_thang[nam_chon] = {}
+
+if idx_thang_chon not in st.session_state.phong_data_theo_thang[nam_chon]:
+    st.session_state.phong_data_theo_thang[nam_chon][idx_thang_chon] = {}
 
 for i in range(1, so_phong + 1):
-    if i not in st.session_state.phong_data_theo_thang[idx_thang_chon]:
+    if i not in st.session_state.phong_data_theo_thang[nam_chon][idx_thang_chon]:
         
-        # TỰ ĐỘNG LẤY SỐ CŨ TỪ SỐ MỚI CỦA THÁNG TRƯỚC
+        # LOGIC TỰ ĐỘNG KẾ THỪA SỐ CŨ TỪ THÁNG TRƯỚC
         dien_cu_mac_dinh = 0
         nuoc_cu_mac_dinh = 0
-        thang_truoc = idx_thang_chon - 1
         
-        # Nếu có dữ liệu tháng trước, kế thừa số điện/nước mới của tháng trước
-        if thang_truoc in st.session_state.phong_data_theo_thang:
-            if i in st.session_state.phong_data_theo_thang[thang_truoc]:
-                dien_cu_mac_dinh = st.session_state.phong_data_theo_thang[thang_truoc][i].get("dien_moi", 0)
-                nuoc_cu_mac_dinh = st.session_state.phong_data_theo_thang[thang_truoc][i].get("nuoc_moi", 0)
+        # Xác định tháng trước và năm trước phòng trường hợp là Tháng 1
+        if idx_thang_chon == 1:
+            thang_truoc = 12
+            nam_truoc = nam_chon - 1
+        else:
+            thang_truoc = idx_thang_chon - 1
+            nam_vor = nam_chon  # Giữ nguyên năm hiện tại
+            nam_truoc = nam_chon
 
-        st.session_state.phong_data_theo_thang[idx_thang_chon][i] = {
+        # Truy vết dữ liệu tháng trước để lấy số mới làm số cũ tháng này
+        if nam_truoc in st.session_state.phong_data_theo_thang:
+            if thang_truoc in st.session_state.phong_data_theo_thang[nam_truoc]:
+                if i in st.session_state.phong_data_theo_thang[nam_truoc][thang_truoc]:
+                    thang_truoc_data = st.session_state.phong_data_theo_thang[nam_truoc][thang_truoc][i]
+                    dien_cu_mac_dinh = thang_truoc_data.get("dien_moi", 0)
+                    nuoc_cu_mac_dinh = thang_truoc_data.get("nuoc_moi", 0)
+
+        st.session_state.phong_data_theo_thang[nam_chon][idx_thang_chon][i] = {
             "gia_phong": 2500000,
             "dien_cu": dien_cu_mac_dinh,
-            "dien_moi": dien_cu_mac_dinh, # Mặc định số mới bằng số cũ nếu chưa nhập
+            "dien_moi": dien_cu_mac_dinh, 
             "nuoc_cu": nuoc_cu_mac_dinh,
-            "nuoc_moi": nuoc_cu_mac_dinh, # Mặc định số mới bằng số cũ nếu chưa nhập
+            "nuoc_moi": nuoc_cu_mac_dinh, 
             "ghi_chu": ""
         }
 
 # ======================================
 # GIAO DIỆN NHẬP DỮ LIỆU
 # ======================================
-st.header(f"📋 Nhập số liệu - {thang_chon}")
+st.header(f"📋 Nhập số liệu - {thang_chon_str}")
 
 phong = st.selectbox(
     "Chọn phòng cần nhập dữ liệu:",
     range(1, so_phong + 1),
-    key=f"selectbox_phong_{idx_thang_chon}" # Đảm bảo không lỗi cache khi đổi tháng
+    key=f"selectbox_phong_{nam_chon}_{idx_thang_chon}" 
 )
 
-# Lấy dữ liệu của phòng được chọn trong tháng được chọn
-data = st.session_state.phong_data_theo_thang[idx_thang_chon][phong]
+# Lấy dữ liệu của phòng thuộc đúng Năm và Tháng đang chọn
+data = st.session_state.phong_data_theo_thang[nam_chon][idx_thang_chon][phong]
 
-st.subheader(f"🏠 Cập nhật: Phòng {phong} ({thang_chon})")
+st.subheader(f"🏠 Cập nhật: Phòng {phong} ({thang_chon_str})")
 c1, c2, c3, c4, c5 = st.columns(5)
 
 with c1:
@@ -124,7 +143,7 @@ with c1:
         min_value=0,
         value=int(data["gia_phong"]),
         step=50000,
-        key=f"gia_{idx_thang_chon}_{phong}"
+        key=f"gia_{nam_chon}_{idx_thang_chon}_{phong}"
     )
 
 with c2:
@@ -132,7 +151,7 @@ with c2:
         "Số điện CŨ",
         min_value=0,
         value=int(data["dien_cu"]),
-        key=f"diencu_{idx_thang_chon}_{phong}"
+        key=f"diencu_{nam_chon}_{idx_thang_chon}_{phong}"
     )
 
 with c3:
@@ -140,7 +159,7 @@ with c3:
         "Số điện MỚI",
         min_value=0,
         value=int(data["dien_moi"]),
-        key=f"dienmoi_{idx_thang_chon}_{phong}"
+        key=f"dienmoi_{nam_chon}_{idx_thang_chon}_{phong}"
     )
 
 with c4:
@@ -148,7 +167,7 @@ with c4:
         "Số nước CŨ",
         min_value=0,
         value=int(data["nuoc_cu"]),
-        key=f"nuoccu_{idx_thang_chon}_{phong}"
+        key=f"nuoccu_{nam_chon}_{idx_thang_chon}_{phong}"
     )
 
 with c5:
@@ -156,98 +175,28 @@ with c5:
         "Số nước MỚI",
         min_value=0,
         value=int(data["nuoc_moi"]),
-        key=f"nuocmoi_{idx_thang_chon}_{phong}"
+        key=f"nuocmoi_{nam_chon}_{idx_thang_chon}_{phong}"
     )
 
 data["ghi_chu"] = st.text_input(
     "📝 Ghi chú (Ví dụ: Đã thanh toán, chưa thanh toán...)",
     value=data["ghi_chu"],
-    key=f"ghichu_{idx_thang_chon}_{phong}"
+    key=f"ghichu_{nam_chon}_{idx_thang_chon}_{phong}"
 )
 
-# Lưu ngược lại session_state theo tháng và theo phòng
-st.session_state.phong_data_theo_thang[idx_thang_chon][phong] = data
+# Lưu dữ liệu trở lại bộ nhớ session_state
+st.session_state.phong_data_theo_thang[nam_chon][idx_thang_chon][phong] = data
 
-# Cập nhật nhanh số cũ cho tháng sau (nếu tháng sau đã được khởi tạo trước đó)
-thang_sau = idx_thang_chon + 1
-if thang_sau in st.session_state.phong_data_theo_thang and phong in st.session_state.phong_data_theo_thang[thang_sau]:
-    st.session_state.phong_data_theo_thang[thang_sau][phong]["dien_cu"] = data["dien_moi"]
-    st.session_state.phong_data_theo_thang[thang_sau][phong]["nuoc_cu"] = data["nuoc_moi"]
-
-# ======================================
-# XỬ LÝ & TÍNH TOÁN DỮ LIỆU
-# ======================================
-ket_qua = []
-tong_doanh_thu = 0
-
-for i in range(1, so_phong + 1):
-    # Đảm bảo phòng i có tồn tại trong bộ nhớ tháng này
-    if i in st.session_state.phong_data_theo_thang[idx_thang_chon]:
-        d = st.session_state.phong_data_theo_thang[idx_thang_chon][i]
-    else:
-        continue
-
-    so_dien = max(d["dien_moi"] - d["dien_cu"], 0)
-    so_nuoc = max(d["nuoc_moi"] - d["nuoc_cu"], 0)
-
-    tien_dien = so_dien * gia_dien
-    tien_nuoc = so_nuoc * gia_nuoc
-    tong_tien = d["gia_phong"] + tien_dien + tien_nuoc + phi_khac
-
-    tong_doanh_thu += tong_tien
-
-    ket_qua.append({
-        "Phòng": f"Phòng {i}",
-        "Giá phòng": d["gia_phong"],
-        "Số điện cũ": d["dien_cu"],
-        "Số điện mới": d["dien_moi"],
-        "Điện tiêu thụ": so_dien,
-        "Tiền điện": tien_dien,
-        "Số nước cũ": d["nuoc_cu"],
-        "Số nước mới": d["nuoc_moi"],
-        "Nước tiêu thụ": so_nuoc,
-        "Tiền nước": tien_nuoc,
-        "Phí khác": phi_khac,
-        "Tổng tiền": tong_tien,
-        "Ghi chú": d["ghi_chu"]
-    })
-
-# ======================================
-# HIỂN THỊ BẢNG KẾT QUẢ & XUẤT FILE
-# ======================================
-st.divider()
-st.header(f"📊 Bảng tổng hợp tiền trọ - {thang_chon}")
-
-if ket_qua:
-    df = pd.DataFrame(ket_qua)
-
-    # Hiển thị số tiền được định dạng qua st.column_config
-    st.dataframe(
-        df,
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "Giá phòng": st.column_config.NumberColumn(format="%d VNĐ"),
-            "Tiền điện": st.column_config.NumberColumn(format="%d VNĐ"),
-            "Tiền nước": st.column_config.NumberColumn(format="%d VNĐ"),
-            "Phí khác": st.column_config.NumberColumn(format="%d VNĐ"),
-            "Tổng tiền": st.column_config.NumberColumn(format="%d VNĐ"),
-        }
-    )
-
-    # Hiển thị tổng doanh thu
-    st.metric(
-        f"💰 TỔNG THU NHẬP CÁC PHÒNG ({thang_chon})",
-        f"{tong_doanh_thu:,.0f} VNĐ"
-    )
-
-    # Nút xuất file dữ liệu CSV kèm tên tháng
-    csv = df.to_csv(index=False).encode("utf-8-sig")
-    st.download_button(
-        label=f"📥 Xuất Báo Cáo {thang_chon} (CSV)",
-        data=csv,
-        file_name=f"Bang_Tien_Phong_{thang_chon.replace('/', '_')}.csv",
-        mime="text/csv"
-    )
+# ĐỒNG BỘ: Nếu đổi số mới ở tháng này, cập nhật ngay lập tức vào số cũ của tháng kế tiếp
+if idx_thang_chon == 12:
+    thang_sau = 1
+    nam_sau = nam_chon + 1
 else:
-    st.info("Chưa có dữ liệu phòng nào cho tháng này.")
+    thang_sau = idx_thang_chon + 1
+    nam_sau = nam_chon
+
+if nam_sau in st.session_state.phong_data_theo_thang:
+    if thang_sau in st.session_state.phong_data_theo_thang[nam_sau]:
+        if phong in st.session_state.phong_data_theo_thang[nam_sau][thang_sau]:
+            st.session_state.phong_data_theo_thang[nam_sau][thang_sau][phong]["dien_cu"] = data["dien_moi"]
+            st.session_state.phong_data_theo_thang[nam_sau]
