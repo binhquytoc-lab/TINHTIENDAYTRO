@@ -63,7 +63,7 @@ for i in range(1, so_phong + 1):
             "dien_cu": 0,
             "dien_moi": 0,
             "nuoc_cu": 0,
-            "nuoc_moi": 0
+            "nuoc_moi": 0,
             "ghi_chu": ""
         }
 
