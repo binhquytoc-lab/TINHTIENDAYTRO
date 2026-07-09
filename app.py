@@ -121,9 +121,7 @@ st.text_input(
     value=data["ghi_chu"],
     key=f"ghichu_{phong}"
 )
-
 data["ghi_chu"] = st.session_state[f"ghichu_{phong}"]
-
 st.session_state.phong_data[phong] = data
 # ======================================
 # TÍNH TOÁN
