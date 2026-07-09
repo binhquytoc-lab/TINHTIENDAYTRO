@@ -51,7 +51,6 @@ so_phong = st.sidebar.slider(
 # CHỌN THÁNG LÀM VIỆC (ĐÃ GỘP CHUNG 1 DÒNG TRÊN SIDEBAR)
 # ======================================
 st.sidebar.markdown("---")
-st.sidebar.header("📅 THỜI GIAN LÀM VIỆC")
 
 # Tạo 2 cột bên trong Sidebar để đẩy Năm và Tháng lên cùng một hàng
 col_nam, col_thang = st.sidebar.columns(2)
