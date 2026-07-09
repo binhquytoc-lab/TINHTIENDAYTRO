@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🏠 PHẦN MỀM QUẢN LÝ THU TIỀN DÃY PHÒNG TRỌ_VŨ ĐỨC BÌNH")
+st.title("🏠 PHẦN MỀM QUẢN LÝ THU TIỀN DÃY TRỌ_VŨ ĐỨC BÌNH")
 
 # ======================================
 # SIDEBAR - ĐƠN GIÁ & CẤU HÌNH
@@ -67,7 +67,7 @@ for i in range(1, so_phong + 1):
 # ======================================
 # GIAO DIỆN NHẬP DỮ LIỆU
 # ======================================
-st.header("📋 Nhập Số Liệu Chi Tiết")
+st.header("📋 Nhập số điện và số nước")
 
 phong = st.selectbox(
     "Chọn phòng cần nhập dữ liệu:",
