@@ -50,6 +50,8 @@ so_phong = st.sidebar.slider(
 # ======================================
 # CHỌN THÁNG LÀM VIỆC (ĐÃ SỬA THÀNH CHUNG MỘT DÒNG)
 # ======================================
+st.sidebar.markdown("---")
+st.sidebar.header("📅 THỜI GIAN LÀM VIỆC")
 
 # Tạo 2 cột bên trong Sidebar để đặt Năm và Tháng nằm song song chung 1 dòng
 col_nam, col_thang = st.sidebar.columns(2)
@@ -249,21 +251,21 @@ st.header(f"📊 Bảng tổng hợp tiền trọ - {thang_chon}")
 if ket_qua:
     df = pd.DataFrame(ket_qua)
 
-    # Hiển thị số tiền được định dạng qua st.column_config
+    # Đã loại bỏ chữ "VNĐ" ở thuộc tính định dạng của tất cả các cột tiền tệ
     st.dataframe(
         df,
         use_container_width=True,
         hide_index=True,
         column_config={
-            "Giá phòng": st.column_config.NumberColumn(format="%d VNĐ"),
-            "Tiền điện": st.column_config.NumberColumn(format="%d VNĐ"),
-            "Tiền nước": st.column_config.NumberColumn(format="%d VNĐ"),
-            "Phí khác": st.column_config.NumberColumn(format="%d VNĐ"),
-            "Tổng tiền": st.column_config.NumberColumn(format="%d VNĐ"),
+            "Giá phòng": st.column_config.NumberColumn(format="%d"),
+            "Tiền điện": st.column_config.NumberColumn(format="%d"),
+            "Tiền nước": st.column_config.NumberColumn(format="%d"),
+            "Phí khác": st.column_config.NumberColumn(format="%d"),
+            "Tổng tiền": st.column_config.NumberColumn(format="%d"),
         }
     )
 
-    # Hiển thị tổng doanh thu
+    # Hiển thị tổng doanh thu (Vẫn giữ VNĐ ở ô Metric bên ngoài để dễ nhìn)
     st.metric(
         f"💰 TỔNG THU NHẬP CÁC PHÒNG ({thang_chon})",
         f"{tong_doanh_thu:,.0f} VNĐ"
