@@ -51,7 +51,7 @@ so_phong = st.sidebar.slider(
 # CHỌN THÁNG LÀM VIỆC (ĐÃ SỬA ĐỔI THÀNH CLICK CHỌN NĂM & THÁNG)
 # ======================================
 st.sidebar.markdown("---")
-st.sidebar.header("📅 THỜI GIAN LÀM VIỆC")
+
 
 # 1. Chọn Năm (Mặc định lấy năm hiện tại, cho phép chọn các năm xung quanh)
 nam_hien_tai = datetime.now().year
