@@ -220,4 +220,61 @@ for i in range(1, so_phong + 1):
 
     tien_dien = so_dien * gia_dien
     tien_nuoc = so_nuoc * gia_nuoc
-    tong_tien = d
+    tong_tien = d["gia_phong"] + tien_dien + tien_nuoc + phi_khac
+
+    tong_doanh_thu += tong_tien
+
+    # Đã lược bỏ 2 trường dữ liệu "Điện tiêu thụ" và "Nước tiêu thụ" theo yêu cầu
+    ket_qua.append({
+        "Phòng": f"Phòng {i}",
+        "Giá phòng": d["gia_phong"],
+        "Số điện cũ": d["dien_cu"],
+        "Số điện mới": d["dien_moi"],
+        "Tiền điện": tien_dien,
+        "Số nước cũ": d["nuoc_cu"],
+        "Số nước mới": d["nuoc_moi"],
+        "Tiền nước": tien_nuoc,
+        "Phí khác": phi_khac,
+        "Tổng tiền": tong_tien,
+        "Ghi chú": d["ghi_chu"]
+    })
+
+# ======================================
+# HIỂN THỊ BẢNG KẾT QUẢ & XUẤT FILE
+# ======================================
+st.divider()
+st.header(f"📊 Bảng tổng hợp tiền trọ - {thang_chon}")
+
+if ket_qua:
+    df = pd.DataFrame(ket_qua)
+
+    # Hiển thị số tiền được định dạng qua st.column_config
+    st.dataframe(
+        df,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "Giá phòng": st.column_config.NumberColumn(format="%d VNĐ"),
+            "Tiền điện": st.column_config.NumberColumn(format="%d VNĐ"),
+            "Tiền nước": st.column_config.NumberColumn(format="%d VNĐ"),
+            "Phí khác": st.column_config.NumberColumn(format="%d VNĐ"),
+            "Tổng tiền": st.column_config.NumberColumn(format="%d VNĐ"),
+        }
+    )
+
+    # Hiển thị tổng doanh thu
+    st.metric(
+        f"💰 TỔNG THU NHẬP CÁC PHÒNG ({thang_chon})",
+        f"{tong_doanh_thu:,.0f} VNĐ"
+    )
+
+    # Nút xuất file dữ liệu CSV kèm tên tháng và năm
+    csv = df.to_csv(index=False).encode("utf-8-sig")
+    st.download_button(
+        label=f"📥 Xuất Báo Cáo {thang_chon} (CSV)",
+        data=csv,
+        file_name=f"Bang_Tien_Phong_{thang_chon.replace('/', '_')}.csv",
+        mime="text/csv"
+    )
+else:
+    st.info("Chưa có dữ liệu phòng nào cho tháng này.")
