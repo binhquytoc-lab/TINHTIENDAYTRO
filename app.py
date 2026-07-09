@@ -51,8 +51,6 @@ so_phong = st.sidebar.slider(
 # CHỌN THÁNG LÀM VIỆC (ĐÃ SỬA ĐỔI THÀNH CLICK CHỌN NĂM & THÁNG)
 # ======================================
 st.sidebar.markdown("---")
-
-
 # 1. Chọn Năm (Mặc định lấy năm hiện tại, cho phép chọn các năm xung quanh)
 nam_hien_tai = datetime.now().year
 danh_sach_nam = list(range(nam_hien_tai - 1, nam_hien_tai + 6))
