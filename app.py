@@ -55,7 +55,7 @@ st.sidebar.header("📅 THỜI GIAN LÀM VIỆC")
 
 # 1. Chọn Năm (Mặc định lấy năm hiện tại, cho phép chọn các năm xung quanh)
 nam_hien_tai = datetime.now().year
-danh_sach_nam = list(range(nam_hien_tai - 2, nam_hien_tai + 5))
+danh_sach_nam = list(range(nam_hien_tai - 1, nam_hien_tai + 6))
 nam_chon = st.sidebar.selectbox(
     "Chọn năm:",
     danh_sach_nam,
